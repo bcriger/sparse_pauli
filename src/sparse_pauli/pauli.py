@@ -11,6 +11,31 @@ class Pauli(object):
         self.x_set = set(x_set)
         self.z_set = set(z_set)
 
+    #printing/comparison
+    def __str__(self):
+        string = ''
+        
+        support = sorted(list(self.x_set | self.z_set))
+        
+        if len(support) == 0:
+            return 'I'
+        
+        for elem in support:
+            if elem in self.x_set:
+                char = 'Y' if elem in self.z_set else 'X'
+            else:
+                char = 'Z'
+
+            string += '{}[{}] '.format(char, elem)
+        return string
+
+    def __eq__(self, other):
+        if self.x_set == other.x_set:
+            return self.z_set == other.z_set
+        else:
+            return False
+    
+    #actual math
     def __mul__(self, other):
         return Pauli(self.x_set ^ other.x_set,
                         self.z_set ^ other.z_set)
@@ -35,8 +60,7 @@ class Pauli(object):
         """
         acts a Hadamard on each bit in qs.
         """
-        diffs = self.x_set ^ self.z_set
-        switches = diffs & qs
+        switches = (self.x_set ^ self.z_set) & set(qs)
         self.x_set ^= switches
         self.z_set ^= switches
         pass
