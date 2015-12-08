@@ -1,0 +1,21 @@
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+
+from sparse_pauli import __version__ as v
+
+config = {
+    'description': 'Set-based implementation of sparse Pauli operators',
+    'author': 'Ben Criger',
+    'url': 'https://github.com/bcriger/sparse_pauli',
+    'download_url': 'https://github.com/bcriger/sparse_pauli.git',
+    'author_email': 'bcriger@gmail.com',
+    'version': '.'.join(v),
+    'install_requires': ['nose'],
+    'packages': ['sparse_pauli'],
+    'scripts': [],
+    'name': 'sparse_pauli'
+}
+
+setup(**config)
