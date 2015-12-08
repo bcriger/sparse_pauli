@@ -15,6 +15,7 @@
 #########################
 src/sparse_pauli.egg-info/
 build/
+dist/
 
 # Packages #
 ############

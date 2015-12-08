@@ -1,7 +1,7 @@
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from setuptools import setup, find_packages, Extension
+
+import sys, os
+sys.path.insert(0, os.path.join(os.getcwd(), 'src/'))
 
 from sparse_pauli import __version__ as v
 
@@ -11,8 +11,9 @@ config = {
     'url': 'https://github.com/bcriger/sparse_pauli',
     'download_url': 'https://github.com/bcriger/sparse_pauli.git',
     'author_email': 'bcriger@gmail.com',
-    'version': '.'.join(v),
+    'version': '.'.join(map(str, v)),
     'install_requires': ['nose'],
+    'package_dir': {'': 'src'},
     'packages': ['sparse_pauli'],
     'scripts': [],
     'name': 'sparse_pauli'
