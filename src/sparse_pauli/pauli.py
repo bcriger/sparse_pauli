@@ -64,3 +64,6 @@ class Pauli(object):
         self.x_set ^= switches
         self.z_set ^= switches
         pass
+
+    def copy(self):
+        return Pauli(self.x_set, self.z_set)
