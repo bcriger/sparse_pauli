@@ -29,11 +29,11 @@ class Pauli(object):
             string += '{}[{}] '.format(char, elem)
         return string
 
-    def __eq__(self, other):
-        if self.x_set == other.x_set:
-            return self.z_set == other.z_set
-        else:
-            return False
+    def __eq__(self, othr):
+        return (self.x_set == othr.x_set) & (self.z_set == othr.z_set)
+    
+    def __ne__(self, othr):
+        return (self.x_set != othr.x_set) | (self.z_set != othr.z_set)
     
     #actual math
     def __mul__(self, other):
