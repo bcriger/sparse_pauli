@@ -56,6 +56,18 @@ class Pauli(object):
                 self.z_set ^= set([ctrl])
         pass
     
+    def cz(self, prs):
+        """
+        acts a cz on pairs of qubits given by the set of tuples 
+        prs.
+        """
+        for q_0, q_1 in prs:
+            if q_0 in self.x_set:
+                self.z_set ^= set([q_1])
+            if q_1 in self.x_set:
+                self.z_set ^= set([q_0])
+        pass
+    
     def h(self, qs):
         """
         acts a Hadamard on each bit in qs.

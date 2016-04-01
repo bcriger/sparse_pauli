@@ -35,3 +35,8 @@ def cnot_test():
     big_pauli = sp.Pauli(set(range(6)), set(range(6)))
     big_pauli.cnot({(0, 1),(2, 3),(4, 5)})
     assert big_pauli == sp.Pauli({0, 2, 4}, {1, 3, 5})
+
+def cz_test():
+    big_pauli = sp.Pauli(set(range(6)), {})
+    big_pauli.cz({(0, 1),(2, 3),(4, 5)})
+    assert big_pauli == sp.Pauli(set(range(6)), set(range(6)))
