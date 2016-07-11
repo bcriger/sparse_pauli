@@ -7,7 +7,7 @@ class Pauli(object):
     Supports multiplication, commutation, Hadamard and CNOT, but 
     nothing else.
     """
-    def __init__(self, x_set, z_set):
+    def __init__(self, x_set={}, z_set={}):
         self.x_set = set(x_set)
         self.z_set = set(z_set)
 
@@ -77,5 +77,39 @@ class Pauli(object):
         self.z_set ^= switches
         pass
 
+    def prep(self, qs, basis='Z'):
+        """
+        Flawlessly prepares qubits in the list `qs` in the +1 
+        eigenstate of the selected basis, which is Z by default, and
+        must be either Z or X.
+        """
+        basis_check(basis)
+        
+        if basis == 'X':
+            self.x_set |= set(qs)
+        elif basis == 'Z':
+            self.z_set |= set(qs) 
+
+        pass
+
+    def meas(self, qs, basis='Z'):
+        """
+        Flawlessly 'measures' qubits in the given basis. I'm not 
+        modeling stabiliser states with these Paulis, I'm modeling 
+        errors. This means that the measurement result is 1 iff the 
+        Pauli being measured anticommutes with the Pauli I'm measuring.  
+        """
+        basis_check(basis)
+    
+        anticom_set = self.x_set if basis == 'Z' else self.z_set
+    
+        return {0 :  set(qs) - anticom_set, 1 : set(qs) & anticom_set}
+    
     def copy(self):
         return Pauli(self.x_set, self.z_set)
+
+#---------------------------------------------------------------------#
+def basis_check(basis):
+    if basis not in ['X', 'Z']:
+        raise ValueError("basis must be 'X' or 'Z', "
+                            "{} entered.".format(basis))
