@@ -12,7 +12,7 @@ class Pauli(object):
         self.z_set = set(z_set)
 
     #printing/comparison
-    def __str__(self):
+    def __repr__(self):
         string = ''
         
         support = sorted(list(self.x_set | self.z_set))
