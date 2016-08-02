@@ -42,6 +42,10 @@ class Pauli(object):
                         self.z_set ^ other.z_set)
 
     def com(self, other):
+        """
+        This method suffers from the usual ambiguity,
+        com(self, other) == 1 means they ANTIcommute.
+        """
         return (len(self.x_set & other.z_set) +
                     len(self.z_set & other.x_set)) % 2
 
