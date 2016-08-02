@@ -27,7 +27,8 @@ class Pauli(object):
                 char = 'Z'
 
             string += '{}[{}] '.format(char, elem)
-        return string
+        #strip trailing space
+        return string[:-1]
 
     def __eq__(self, othr):
         return (self.x_set == othr.x_set) & (self.z_set == othr.z_set)
