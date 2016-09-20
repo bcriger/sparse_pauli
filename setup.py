@@ -1,6 +1,8 @@
+from __future__ import absolute_import
 from setuptools import setup, find_packages, Extension
 
 import sys, os
+from six.moves import map
 sys.path.insert(0, os.path.join(os.getcwd(), 'src/'))
 
 from sparse_pauli import __version__ as v
