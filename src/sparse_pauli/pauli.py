@@ -113,6 +113,9 @@ class Pauli(object):
     def copy(self):
         return Pauli(self.x_set, self.z_set)
 
+    def support(self):
+        return self.x_set.union(self.z_set)
+
 #---------------------------------------------------------------------#
 def basis_check(basis):
     if basis not in ['X', 'Z']:
