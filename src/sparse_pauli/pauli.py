@@ -15,8 +15,11 @@ class Pauli(object):
     def __repr__(self):
         string = ''
         
-        support = sorted(list(self.x_set | self.z_set))
-        
+        try:
+            support = sorted(list(self.x_set | self.z_set))
+        except TypeError:
+            support = list(self.x_set | self.z_set)
+
         if len(support) == 0:
             return 'I'
         
