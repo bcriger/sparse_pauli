@@ -119,9 +119,7 @@ class Pauli(object):
     def support(self):
         return self.x_set.union(self.z_set)
 
-    def I():
-        return Pauli({}, {})
-
+    
 #---------------------------------------------------------------------#
 def basis_check(basis):
     if basis not in ['X', 'Z']:
