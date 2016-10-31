@@ -85,19 +85,18 @@ class Pauli(object):
         self.z_set ^= switches
         pass
 
-    def prep(self, qs, basis='Z'):
+    def prep(self, qs):
         """
         Flawlessly prepares qubits in the list `qs` in the +1 
-        eigenstate of the selected basis, which is Z by default, and
-        must be either Z or X.
+        eigenstate a basis which is not tracked by this object.
+        The sense in which 'preparation' is meant here is in the sense
+        "providing an error free qubit at a specific location". 
+        To do arbitrary GK preparations, I'd have to simulate what 
+        happens to a tableau, which is outside the scope of this 
+        library.
         """
-        basis_check(basis)
-        
-        if basis == 'X':
-            self.x_set |= set(qs)
-        elif basis == 'Z':
-            self.z_set |= set(qs) 
-
+        self.x_set -= set(qs)
+        self.z_set -= set(qs)
         pass
 
     def meas(self, qs, basis='Z'):
