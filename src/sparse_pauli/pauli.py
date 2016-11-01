@@ -85,6 +85,9 @@ class Pauli(object):
         self.z_set ^= switches
         pass
 
+    def p(self, qs):
+        raise NotImplementedError("Phase gates not yet supported.")
+
     def prep(self, qs):
         """
         Flawlessly prepares qubits in the list `qs` in the +1 
