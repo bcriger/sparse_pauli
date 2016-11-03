@@ -119,7 +119,17 @@ class Pauli(object):
         return Pauli(self.x_set, self.z_set)
 
     def support(self):
+        """
+        The set of all qubits on which the Pauli is non-trivial.
+        """
         return self.x_set.union(self.z_set)
+
+    def xz_pair(self):
+        """
+        For convenience, returns an X Pauli and a Z Pauli whose 
+        product is `self`.
+        """
+        return Pauli(self.x_set, {}), Pauli({}, self.z_set)
 
     
 #---------------------------------------------------------------------#
