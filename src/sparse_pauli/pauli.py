@@ -2,18 +2,24 @@ __all__ = ["Pauli"]
 
 class Pauli(object):
     """
-    Stores the X and Z support of a (phaseless) Pauli as two sets.
+    Stores the X and Z support of a Pauli as two sets, with the phase 
+    as an integer between 0 and 3.
 
-    Supports multiplication, commutation, Hadamard and CNOT, but 
-    nothing else.
+    Supports multiplication, commutation, Hadamard and CNOT, and a few
+    other operations.
+
+    Implied internal representation is
+    (-i)^ph * (X_{x_set}) * (Z_{z_set}).
     """
-    def __init__(self, x_set={}, z_set={}):
+    def __init__(self, x_set={}, z_set={}, ph=0):
         self.x_set = set(x_set)
         self.z_set = set(z_set)
+        self.ph = ph % 4 
 
     #printing/comparison
     def __repr__(self):
-        string = ''
+        total_phase = (self.ph - len(self.x_set & self.z_set)) % 4 
+        string = {0 : '', 1 : 'i', 2 : '-', 3 : '-i'}[total_phase]
         
         try:
             support = sorted(list(self.x_set | self.z_set))
@@ -33,24 +39,34 @@ class Pauli(object):
         #strip trailing space
         return string[:-1]
 
-    def __eq__(self, othr):
-        return (self.x_set == othr.x_set) & (self.z_set == othr.z_set)
+    def __eq__(self, othr, sign=False):
+        strings_eq = (self.x_set == othr.x_set) & (self.z_set == othr.z_set)
+        if sign:
+            return strings_eq & (self.ph == othr.ph)
+        else:
+            return strings_eq
     
-    def __ne__(self, othr):
-        return (self.x_set != othr.x_set) | (self.z_set != othr.z_set)
+    def __ne__(self, othr, sign=False):
+        strings_neq = (self.x_set != othr.x_set) | (self.z_set != othr.z_set)
+        if strings_neq or not(sign):
+            return strings_neq
+        else:
+            return strings_neq | (self.ph != othr.ph)
     
     #actual math
-    def __mul__(self, other):
-        return Pauli(self.x_set ^ other.x_set,
-                        self.z_set ^ other.z_set)
-
-    def com(self, other):
+    def com(self, othr):
         """
         This method suffers from the usual ambiguity,
-        com(self, other) == 1 means they ANTIcommute.
+        com(self, othr) == 1 means they ANTIcommute.
         """
-        return (len(self.x_set & other.z_set) +
-                    len(self.z_set & other.x_set)) % 2
+        return (len(self.x_set & othr.z_set) +
+                    len(self.z_set & othr.x_set)) % 2
+
+    def __mul__(self, othr):
+        new_ph = self.ph + othr.ph + 2 * self.com(othr)
+        return Pauli(self.x_set ^ othr.x_set,
+                        self.z_set ^ othr.z_set, new_ph)
+
 
     def cnot(self, ctrl_targs):
         """
@@ -83,6 +99,7 @@ class Pauli(object):
         switches = (self.x_set ^ self.z_set) & set(qs)
         self.x_set ^= switches
         self.z_set ^= switches
+        self.ph += 2 * len(self.x_set & self.z_set & set(qs))
         pass
 
     def p(self, qs):
@@ -130,6 +147,7 @@ class Pauli(object):
         product is `self`.
         """
         return Pauli(self.x_set, {}), Pauli({}, self.z_set)
+
 
     
 #---------------------------------------------------------------------#
