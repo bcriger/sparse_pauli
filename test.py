@@ -28,7 +28,7 @@ def test_com_zx():
 #----------Does Multiplication Work Across Tensor Products?-----------#
 
 def mul_test_yy():
-    assert x*z*ix*iz == sp.Pauli({0, 1}, {0, 1})
+    assert x * z * ix * iz == sp.Pauli({0, 1}, {0, 1})
 
 #---------------------------Do Gates Work?----------------------------#
 
@@ -59,14 +59,3 @@ def meas_x_test():
     meas_qs = range(4)
     assert TEST_PAULI.meas(meas_qs, 'X') == {1 : {2, 3}, 0 : {0, 1}}
 
-def prep_z_test():
-    prep_qs = range(4)
-    temp_pauli = TEST_PAULI
-    temp_pauli.prep(prep_qs)
-    assert set(prep_qs) <= temp_pauli.z_set
-
-def prep_x_test():
-    prep_qs = range(4)
-    temp_pauli = TEST_PAULI
-    temp_pauli.prep(prep_qs, 'X')
-    assert set(prep_qs) <= temp_pauli.x_set
