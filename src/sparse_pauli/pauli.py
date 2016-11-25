@@ -100,10 +100,14 @@ class Pauli(object):
         self.x_set ^= switches
         self.z_set ^= switches
         self.ph += 2 * len(self.x_set & self.z_set & set(qs))
+        self.ph %= 4
         pass
 
     def p(self, qs):
-        raise NotImplementedError("Phase gates not yet supported.")
+        switches = self.x_set & qs
+        self.z_set ^= switches
+        self.ph = (self.ph + len(switches)) % 4
+        pass
 
     def prep(self, qs):
         """
