@@ -145,6 +145,9 @@ class Pauli(object):
         """
         return self.x_set.union(self.z_set)
 
+    def weight(self):
+        return len(self.support())
+
     def xz_pair(self):
         """
         For convenience, returns an X Pauli and a Z Pauli whose 
