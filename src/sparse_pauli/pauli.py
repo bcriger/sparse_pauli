@@ -1,4 +1,4 @@
-__all__ = ["Pauli"]
+__all__ = ["Pauli", "X", "Y", "Z"]
 
 class Pauli(object):
     """
@@ -130,7 +130,7 @@ class Pauli(object):
         errors. This means that the measurement result is 1 iff the 
         Pauli being measured anticommutes with the Pauli I'm measuring.  
         """
-        basis_check(basis)
+        _basis_check(basis)
     
         anticom_set = self.x_set if basis == 'Z' else self.z_set
     
@@ -155,10 +155,21 @@ class Pauli(object):
         """
         return Pauli(self.x_set, {}), Pauli({}, self.z_set)
 
+#---------------------------public functions--------------------------#
 
-    
+X = lambda sett: Pauli(x_set=sett)
+
+Y = lambda sett: Pauli(x_set=sett, z_set=sett, ph=len(sett))
+
+Z = lambda sett: Pauli(z_set=sett)
+
 #---------------------------------------------------------------------#
-def basis_check(basis):
+
+#-------------------------private functions---------------------------#
+
+def _basis_check(basis):
     if basis not in ['X', 'Z']:
         raise ValueError("basis must be 'X' or 'Z', "
                             "{} entered.".format(basis))
+
+#---------------------------------------------------------------------#
