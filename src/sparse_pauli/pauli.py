@@ -1,4 +1,10 @@
-__all__ = ["Pauli", "X", "Y", "Z"]
+__all__ = ["Pauli", "I", "X", "Y", "Z"]
+
+PHASES_README = """
+For multiplying Paulis by complex numbers, we have a dict that
+basically gives us the complex log.
+"""
+PHASES = {1 : 0, 1j : 1, -1 : 2, -1j : 3}
 
 class Pauli(object):
     """
@@ -63,10 +69,25 @@ class Pauli(object):
                     len(self.z_set & othr.x_set)) % 2
 
     def __mul__(self, othr):
-        new_ph = self.ph + othr.ph + 2 * self.com(othr)
-        return Pauli(self.x_set ^ othr.x_set,
-                        self.z_set ^ othr.z_set, new_ph)
+        if type(othr) == Pauli:
+            com_term = len(self.z_set & othr.x_set) % 2
+            new_ph = self.ph + othr.ph + 2 * com_term
+            return Pauli(self.x_set ^ othr.x_set,
+                            self.z_set ^ othr.z_set, new_ph)
+        else:
+            return self.__rmul__(othr)
 
+    def __rmul__(self,othr):
+        #assume number
+        try:
+            new_ph = self.ph + PHASES[othr]
+            return Pauli(self.x_set, self.z_set, new_ph)
+        except KeyError:
+            raise ValueError("Paulis can only be multiplied by "
+                "{}, {} entered.".format(list(PHASES.keys()), othr))
+
+    def __neg__(self):
+        return -1 * self
 
     def cnot(self, ctrl_targs):
         """
@@ -156,6 +177,7 @@ class Pauli(object):
         return Pauli(self.x_set, {}), Pauli({}, self.z_set)
 
 #---------------------------public functions--------------------------#
+I = Pauli()
 
 X = lambda sett: Pauli(x_set=sett)
 
