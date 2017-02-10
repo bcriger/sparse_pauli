@@ -77,7 +77,7 @@ class Pauli(object):
         else:
             return self.__rmul__(othr)
 
-    def __rmul__(self,othr):
+    def __rmul__(self, othr):
         #assume number
         try:
             new_ph = self.ph + PHASES[othr]
@@ -88,6 +88,9 @@ class Pauli(object):
 
     def __neg__(self):
         return -1 * self
+
+    def __call__(self,othr):
+        return -othr if self.com(othr) else othr
 
     def cnot(self, ctrl_targs):
         """
