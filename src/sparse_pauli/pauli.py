@@ -182,11 +182,11 @@ class Pauli(object):
 #---------------------------public functions--------------------------#
 I = Pauli()
 
-X = lambda sett: Pauli(x_set=sett)
+X = lambda sett: Pauli(x_set=set(sett))
 
-Y = lambda sett: Pauli(x_set=sett, z_set=sett, ph=len(sett))
+Y = lambda sett: Pauli(x_set=set(sett), z_set=set(sett), ph=len(sett))
 
-Z = lambda sett: Pauli(z_set=sett)
+Z = lambda sett: Pauli(z_set=set(sett))
 
 #---------------------------------------------------------------------#
 
