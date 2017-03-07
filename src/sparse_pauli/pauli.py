@@ -1,4 +1,6 @@
-__all__ = ["Pauli", "I", "X", "Y", "Z"]
+from itertools import chain, combinations, product
+
+__all__ = ["Pauli", "I", "X", "Y", "Z", "local_group"]
 
 PHASES_README = """
 For multiplying Paulis by complex numbers, we have a dict that
@@ -188,6 +190,14 @@ Y = lambda sett: Pauli(x_set=set(sett), z_set=set(sett), ph=len(sett))
 
 Z = lambda sett: Pauli(z_set=set(sett))
 
+def local_group(support):
+    """
+    Generator iterating over the entire Pauli group on bits in the 
+    iterable `support`.
+    """
+    for set_pr in product(_powerset(support), repeat=2):
+        yield Pauli(*set_pr)
+
 #---------------------------------------------------------------------#
 
 #-------------------------private functions---------------------------#
@@ -196,5 +206,14 @@ def _basis_check(basis):
     if basis not in ['X', 'Z']:
         raise ValueError("basis must be 'X' or 'Z', "
                             "{} entered.".format(basis))
+
+def _powerset(iterable):
+    """
+    From the itertools recipe page:
+    powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)
+    """
+    s = list(iterable)
+    return chain.from_iterable(combinations(s, r)
+                                for r in range(len(s)+1))
 
 #---------------------------------------------------------------------#
