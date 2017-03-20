@@ -1,4 +1,5 @@
 from itertools import chain, combinations, product
+from operator import add
 
 __all__ = ["Pauli", "I", "X", "Y", "Z", "local_group"]
 
@@ -7,6 +8,17 @@ For multiplying Paulis by complex numbers, we have a dict that
 basically gives us the complex log.
 """
 PHASES = {1 : 0, 1j : 1, -1 : 2, -1j : 3}
+
+def char(elem, pauli):
+    """
+    Spits out an X/Y/Z depending on what sets elem is a member of.
+    """
+    
+    if elem in pauli.x_set:
+        return 'Y' if elem in pauli.z_set else 'X'
+    
+    return 'Z' if elem in pauli.z_set else 'I'
+
 
 class Pauli(object):
     """
@@ -24,28 +36,57 @@ class Pauli(object):
         self.z_set = set(z_set)
         self.ph = ph % 4 
 
-    #printing/comparison
+    # basic info/operations
+    def copy(self):
+        return Pauli(self.x_set, self.z_set)
+
+    def support(self):
+        """
+        The set of all qubits on which the Pauli is non-trivial.
+        """
+        bit_set = self.x_set.union(self.z_set)
+        try: 
+            return sorted(bit_set)
+        except TypeError:
+            return bit_set
+
+    def weight(self):
+        return len(self.support())
+
+    def xz_pair(self):
+        """
+        For convenience, returns an X Pauli and a Z Pauli whose 
+        product is `self`.
+        """
+        return Pauli(self.x_set, {}), Pauli({}, self.z_set)
+
+    def str_sprt_pair(self):
+        """
+        Returns a tuple (str, sprt), where str is a string, and sprt
+        is a sorted (if possible) tuple of qubit labels on which the
+        Pauli exists.
+        """
+        sprt = tuple(self.support())
+        string = reduce(add, [char(elem, self) for elem in sprt])
+        return string, sprt
+    
+    # printing/comparison
     def __repr__(self):
         total_phase = (self.ph - len(self.x_set & self.z_set)) % 4 
         string = {0 : '', 1 : 'i', 2 : '-', 3 : '-i'}[total_phase]
         
-        try:
-            support = sorted(list(self.x_set | self.z_set))
-        except TypeError:
-            support = list(self.x_set | self.z_set)
+        sprt = self.support()
 
-        if len(support) == 0:
+        if len(sprt) == 0:
             return 'I'
         
-        for elem in support:
-            if elem in self.x_set:
-                char = 'Y' if elem in self.z_set else 'X'
-            else:
-                char = 'Z'
-
-            string += '{}[{}] '.format(char, elem)
+        for elem in sprt:
+            ch = char(elem, self)
+            string += '{}[{}] '.format(ch, elem)
+        
         #strip trailing space
         return string[:-1]
+
 
     def __eq__(self, othr, sign=False):
         strings_eq = (self.x_set == othr.x_set) & (self.z_set == othr.z_set)
@@ -162,24 +203,6 @@ class Pauli(object):
     
         return {0 :  set(qs) - anticom_set, 1 : set(qs) & anticom_set}
     
-    def copy(self):
-        return Pauli(self.x_set, self.z_set)
-
-    def support(self):
-        """
-        The set of all qubits on which the Pauli is non-trivial.
-        """
-        return self.x_set.union(self.z_set)
-
-    def weight(self):
-        return len(self.support())
-
-    def xz_pair(self):
-        """
-        For convenience, returns an X Pauli and a Z Pauli whose 
-        product is `self`.
-        """
-        return Pauli(self.x_set, {}), Pauli({}, self.z_set)
 
 #---------------------------public functions--------------------------#
 I = Pauli()
