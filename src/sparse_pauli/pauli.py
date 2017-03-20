@@ -1,7 +1,10 @@
 from itertools import chain, combinations, product
-from operator import add
+from operator import add, xor
 
-__all__ = ["Pauli", "I", "X", "Y", "Z", "local_group"]
+__all__ = [
+            "Pauli", "I", "X", "Y", "Z", "local_group",
+            "generated_group"
+        ]
 
 PHASES_README = """
 For multiplying Paulis by complex numbers, we have a dict that
@@ -67,7 +70,7 @@ class Pauli(object):
         Pauli exists.
         """
         sprt = tuple(self.support())
-        string = reduce(add, [char(elem, self) for elem in sprt])
+        string = reduce(add, [char(elem, self) for elem in sprt], '')
         return string, sprt
     
     # printing/comparison
@@ -220,6 +223,18 @@ def local_group(support):
     """
     for set_pr in product(_powerset(support), repeat=2):
         yield Pauli(*set_pr)
+
+def generated_group(x_sets, z_sets):
+    """
+    To generate a restricted group directly, rather than filtering
+    a local group, we can start from lists of sets of acceptable Xs and
+    Zs.
+    """
+    for x_lst, z_lst in product(_powerset(x_sets), _powerset(z_sets)):
+        x_set = reduce(xor, x_lst, set())
+        z_set = reduce(xor, z_lst, set())
+        yield Pauli(x_set, z_set)
+
 
 #---------------------------------------------------------------------#
 
