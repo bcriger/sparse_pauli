@@ -1,3 +1,4 @@
+from functools import reduce #PY3 compatibility
 from itertools import chain, combinations, product
 from operator import add, xor
 
