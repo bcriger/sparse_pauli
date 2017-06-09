@@ -175,7 +175,7 @@ class Pauli(object):
         pass
 
     def p(self, qs):
-        switches = self.x_set & qs
+        switches = self.x_set & set(qs)
         self.z_set ^= switches
         self.ph = (self.ph + len(switches)) % 4
         pass
