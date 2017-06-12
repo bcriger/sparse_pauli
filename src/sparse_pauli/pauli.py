@@ -4,7 +4,7 @@ from operator import add, xor
 
 __all__ = [
             "Pauli", "I", "X", "Y", "Z", "local_group",
-            "generated_group"
+            "generated_group", "char"
         ]
 
 PHASES_README = """
