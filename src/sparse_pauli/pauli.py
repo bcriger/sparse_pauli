@@ -105,6 +105,9 @@ class Pauli(object):
             return strings_neq
         else:
             return strings_neq | (self.ph != othr.ph)
+
+    def __hash__(self):
+        return hash((tuple(self.x_set), tuple(self.z_set)))
     
     #actual math
     def com(self, othr):
@@ -125,7 +128,7 @@ class Pauli(object):
             return self.__rmul__(othr)
 
     def __rmul__(self, othr):
-        #assume number
+        # try number
         try:
             new_ph = self.ph + PHASES[othr]
             return Pauli(self.x_set, self.z_set, new_ph)
