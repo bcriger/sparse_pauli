@@ -50,9 +50,9 @@ class Pauli(object):
         """
         bit_set = self.x_set.union(self.z_set)
         try: 
-            return sorted(bit_set)
+            return list(sorted(bit_set))
         except TypeError:
-            return bit_set
+            return list(bit_set)
 
     def weight(self):
         return len(self.support())
