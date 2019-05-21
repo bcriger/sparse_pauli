@@ -59,3 +59,8 @@ def meas_x_test():
     meas_qs = range(4)
     assert TEST_PAULI.meas(meas_qs, 'X') == {1 : {2, 3}, 0 : {0, 1}}
 
+#----------------Does String-Based Construction Work?-----------------#
+
+def string_construction_test():
+    # By default, __eq__ does not check phases.
+    assert sp.str_pauli('IXYZ') == sp.Pauli({1, 2}, {2, 3})

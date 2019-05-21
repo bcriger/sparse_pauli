@@ -4,7 +4,7 @@ from operator import add, xor
 
 __all__ = [
             "Pauli", "I", "X", "Y", "Z", "local_group",
-            "generated_group", "char"
+            "generated_group", "char", "str_pauli"
         ]
 
 PHASES_README = """
@@ -239,6 +239,30 @@ def generated_group(x_sets, z_sets):
         z_set = reduce(xor, z_lst, set())
         yield Pauli(x_set, z_set)
 
+def str_pauli(string, support=None, error_check=True):
+    
+    string = string.upper()
+    
+    if error_check:
+        if not all([ltr in 'IXYZ' for ltr in string]):
+            raise InputError("All letters in input string must be "
+                "I, X, Y, or Z. {} entered.".format(string) + 
+                "Note: Phases not supported.")
+
+    if support is None:
+        support = range(len(string))
+
+    new_pauli = I
+
+    for idx, ltr in enumerate(string):
+    
+        if ltr in 'XY':
+            new_pauli.x_set |= {support[idx]}
+        
+        if ltr in 'YZ': # *not* an elif
+            new_pauli.z_set |= {support[idx]}
+    
+    return new_pauli
 
 #---------------------------------------------------------------------#
 
