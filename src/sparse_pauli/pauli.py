@@ -142,6 +142,9 @@ class Pauli(object):
     def __call__(self,othr):
         return -othr if self.com(othr) else othr
 
+    def __getitem__(self, dx_set):
+        return Pauli(self.x_set & dx_set, self.z_set & dx_set, self.ph)
+
     def cnot(self, ctrl_targs):
         """
         acts a cnot on pairs of qubits given by the set of tuples 
