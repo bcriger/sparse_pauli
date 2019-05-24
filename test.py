@@ -25,6 +25,19 @@ def test_com_xz():
 def test_com_zx():
     assert com_check(z, x, 1)
 
+#--------------Do __getitem__ and __setitem__ work?-------------------#
+
+def getitem_test():
+    big_pauli = sp.X({0, 'a', 3.2}) * sp.Z({'a', 0, 1})
+    assert big_pauli[{0, 'a'}] == sp.Y({0, 'a'})
+
+def setitem_test():
+    big_pauli = TEST_PAULI.copy()
+    big_pauli[{2}] = sp.X({2})
+    big_pauli[{3}] = sp.X({3, 4, 5})
+    big_pauli[{7}] = sp.Z({})
+    assert big_pauli == sp.Pauli({1, 2, 3, 5, 6}, {6})
+
 #----------Does Multiplication Work Across Tensor Products?-----------#
 
 def mul_test_yy():

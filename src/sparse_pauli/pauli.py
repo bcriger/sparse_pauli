@@ -145,6 +145,24 @@ class Pauli(object):
     def __getitem__(self, dx_set):
         return Pauli(self.x_set & dx_set, self.z_set & dx_set, self.ph)
 
+    def __setitem__(self, dx_set, othr):
+        """
+        Sets the Pauli `self` equal to the Pauli `othr` on the set of
+        indices specified by `dx_set`. 
+        """
+        if type(othr) != Pauli:
+            raise TypeError("Only sparse_pauli.Pauli objects may be "
+                            "assigned to sparse_pauli.Pauli 'slices'.")
+        
+        self.x_set -= dx_set
+        self.z_set -= dx_set
+
+        # I don't want you to update indices outside dx_set:
+        self.x_set |= othr.x_set & dx_set
+        self.z_set |= othr.z_set & dx_set
+        
+        pass # subroutine
+
     def cnot(self, ctrl_targs):
         """
         acts a cnot on pairs of qubits given by the set of tuples 
