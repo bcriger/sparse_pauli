@@ -233,7 +233,7 @@ class Pauli(object):
     
 
 #---------------------------public functions--------------------------#
-I = Pauli()
+I = Pauli().copy()
 
 X = lambda sett: Pauli(x_set=set(sett))
 
