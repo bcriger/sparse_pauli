@@ -233,7 +233,8 @@ class Pauli(object):
     
 
 #---------------------------public functions--------------------------#
-I = Pauli().copy()
+def I():
+    return Pauli()
 
 X = lambda sett: Pauli(x_set=set(sett))
 
@@ -273,7 +274,7 @@ def str_pauli(string, support=None, error_check=True):
     if support is None:
         support = range(len(string))
 
-    new_pauli = I
+    new_pauli = I()
 
     for idx, ltr in enumerate(string):
     
